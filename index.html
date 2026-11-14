@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulations WAN · Mohamed Rayene Trabelsi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#ECEFF3; --panel:#FFFFFF; --ink:#18212E; --muted:#5B6678; --line:#C9D0DA;
+  --cobalt:#2F4BFF; --teal:#009E9A; --magenta:#D1246B; --amber:#E39A00; --violet:#7448F0; --coral:#EA5B33;
+}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Bricolage Grotesque",system-ui,sans-serif; color:var(--ink); background:var(--paper);
+  background-image:radial-gradient(var(--line) 1px,transparent 1px); background-size:22px 22px;
+  line-height:1.55;
+}
+.wrap{max-width:1100px;margin:0 auto;padding:56px 24px 40px;display:grid;grid-template-columns:330px 1fr;gap:64px}
+
+/* colonne identité */
+aside{position:sticky;top:48px;align-self:start}
+h1{font-size:clamp(2.6rem,5vw,3.8rem);line-height:.95;font-weight:800;letter-spacing:-.03em}
+.sub{margin-top:18px;color:var(--muted);font-size:1.05rem;max-width:30ch}
+.id{margin-top:34px;padding-top:20px;border-top:2px solid var(--ink)}
+.id b{display:block;font-size:1.15rem}
+.id span{display:block;color:var(--muted)}
+.count{margin-top:26px;font-family:"IBM Plex Mono",monospace;font-size:.85rem;color:var(--ink)}
+.count i{font-style:normal;background:var(--ink);color:#fff;padding:2px 8px;border-radius:99px;margin-right:6px}
+
+/* parcours */
+.path{position:relative;list-style:none;padding:0 0 0 52px}
+.path::before{content:"";position:absolute;left:15px;top:8px;bottom:8px;width:4px;border-radius:4px;background:var(--ink)}
+.packet{position:absolute;left:11px;top:8px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--ink);z-index:2;animation:hop 2.4s cubic-bezier(.6,0,.3,1) 1 forwards}
+@keyframes hop{from{top:8px}to{top:calc(100% - 20px)}}
+.lab{position:relative;background:var(--panel);border:2px solid var(--ink);border-radius:14px 14px 14px 4px;padding:22px 24px;margin-bottom:26px;box-shadow:6px 6px 0 var(--c)}
+.lab::before{content:"";position:absolute;left:-46px;top:26px;width:30px;height:30px;border-radius:50%;background:var(--c);border:4px solid var(--paper);outline:2px solid var(--ink)}
+.lab::after{content:"";position:absolute;left:-16px;top:39px;width:16px;height:4px;background:var(--ink)}
+.head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.tag{font-weight:800;font-size:1.7rem;color:var(--c);letter-spacing:-.02em}
+h2{font-size:1.35rem;font-weight:600}
+.lab p{margin:8px 0 14px;color:var(--muted);max-width:60ch}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chips code{font-family:"IBM Plex Mono",monospace;font-size:.78rem;background:var(--paper);border:1px solid var(--line);padding:3px 9px;border-radius:6px}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:inherit;font-weight:600;text-decoration:none;padding:10px 18px;border-radius:8px;border:2px solid var(--ink);color:var(--ink);background:transparent;transition:transform .15s,background .15s,color .15s}
+.btn.main{background:var(--ink);color:#fff}
+.btn:hover{transform:translateY(-2px)}
+.btn:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+.btn.off{pointer-events:none;opacity:.4;border-style:dashed;background:transparent;color:var(--muted);border-color:var(--muted)}
+footer{max-width:1100px;margin:0 auto;padding:10px 24px 50px;color:var(--muted);font-size:.9rem}
+
+@media (max-width:860px){
+  .wrap{grid-template-columns:1fr;gap:36px;padding-top:36px}
+  aside{position:static}
+}
+@media (prefers-reduced-motion:reduce){.packet{display:none}.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <aside>
+    <h1>Simulations<br>WAN</h1>
+    <p class="sub">Les travaux pratiques d'interconnexion de réseaux, à lancer dans le navigateur avec leur compte rendu.</p>
+    <div class="id">
+      <b>Mohamed Rayene Trabelsi</b>
+      <span>RSI31</span>
+      <span>ISET Nabeul</span>
+    </div>
+    <p class="count" id="count"></p>
+  </aside>
+
+  <main>
+    <ol class="path" id="path"><span class="packet" aria-hidden="true"></span></ol>
+  </main>
+</div>
+
+<footer>Mohamed Rayene Trabelsi · RSI31 · ISET Nabeul</footer>
+
+<script>
+/* ===== À MODIFIER ===== */
+const SIM_PATH = "HTML5/index.html";   // fichier de la simulation dans chaque dossier
+const PDF_FILE = "compte rendu.pdf";   // nom du PDF dans chaque dossier
+
+const LABS = [
+  {dir:"tp1-1", tag:"TP1", name:"Partie 1", sub:"Simulation du TP1, première partie.", chips:["TP1"], c:"--cobalt"},
+  {dir:"tp1_2", tag:"TP1", name:"Partie 2", sub:"Simulation du TP1, deuxième partie.", chips:["TP1"], c:"--cobalt"},
+  {dir:"tp2-vpn-mpls", tag:"TP2", name:"VPN MPLS pour un client", sub:"VRF avec RD et RT, EIGRP entre PE et CE, MP-BGP VPNv4 entre les routeurs de bordure.", chips:["ip vrf forwarding Client_A","address-family vpnv4"], c:"--violet"},
+  {dir:"tp3-NAT", tag:"TP3", name:"DHCP et NAT", sub:"Distribution d'adresses par DHCP et traduction des adresses privées vers l'extérieur.", chips:["ip dhcp pool","ip nat inside source list"], c:"--teal"},
+  {dir:"tp4-ip-sec-gre", tag:"TP4", name:"GRE over IPsec", sub:"Tunnel GRE entre deux sites, protégé par IPsec pour transporter aussi le routage dynamique.", chips:["interface tunnel 0","crypto ipsec profile"], c:"--coral"},
+  {dir:"tp4-ip-sec-vpn", tag:"TP4", name:"VPN IPsec site à site", sub:"Politique ISAKMP, transform-set et crypto map pour relier deux réseaux à travers l'opérateur.", chips:["crypto isakmp policy 10","crypto map"], c:"--coral"},
+  {dir:"tpbgp", tag:"BGP", name:"Routage BGP", sub:"Mise en place des sessions BGP et échange de routes entre systèmes autonomes.", chips:["router bgp","neighbor"], c:"--magenta"},
+  {dir:"redistribution", tag:"RED", name:"Redistribution de routes", sub:"Échange de routes entre protocoles de routage différents sur un routeur frontière.", chips:["redistribute"], c:"--amber"}
+];
+/* ====================== */
+
+const list = document.getElementById("path");
+document.getElementById("count").innerHTML = '<i>' + LABS.length + '</i>simulations';
+
+LABS.forEach(l => {
+  const sim = encodeURI(l.dir + "/" + SIM_PATH);
+  const pdf = encodeURI(l.dir + "/" + PDF_FILE);
+  const li = document.createElement("li");
+  li.className = "lab";
+  li.style.setProperty("--c", "var(" + l.c + ")");
+  li.innerHTML =
+    '<div class="head"><span class="tag">' + l.tag + '</span><h2>' + l.name + '</h2></div>' +
+    '<p>' + l.sub + '</p>' +
+    '<div class="chips">' + l.chips.map(x => '<code>' + x + '</code>').join("") + '</div>' +
+    '<div class="actions">' +
+      '<a class="btn main" data-url="' + sim + '" href="' + sim + '" target="_blank" rel="noopener">Lancer la simulation</a>' +
+      '<a class="btn" data-url="' + pdf + '" href="' + pdf + '" target="_blank" rel="noopener">Compte rendu (PDF)</a>' +
+    '</div>';
+  list.appendChild(li);
+});
+
+/* Grise le bouton si le fichier n'existe pas encore sur le site (HTTP uniquement) */
+if (location.protocol.startsWith("http")) {
+  document.querySelectorAll(".btn[data-url]").forEach(a => {
+    fetch(a.dataset.url, {method:"HEAD"}).then(r => {
+      if (!r.ok) { a.classList.add("off"); a.title = "Fichier introuvable : " + decodeURI(a.dataset.url); a.removeAttribute("href"); }
+    }).catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
