@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
 :root{--navy:#0A1F3D;--navy2:#123A6B;--bg:#F3F6FB;--ink:#12213A;--muted:#5A6A82;--line:#DCE3EE;
---cobalt:#2563EB;--teal:#0E9F9A;--violet:#7C4DFF;--coral:#E8553A;--magenta:#C92A72;--amber:#D98A00}
+--cobalt:#2563EB;--teal:#0E9F9A;--violet:#7C4DFF;--coral:#E8553A;--magenta:#C92A72;--amber:#D98A00;--green:#2F9E44;--indigo:#4C6EF5}
 *{box-sizing:border-box;margin:0}
 body{font-family:"Plus Jakarta Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
 .hero{background:radial-gradient(900px 500px at 80% 40%,var(--navy2),var(--navy));color:#fff;padding:0 24px 70px}
@@ -69,7 +69,7 @@ footer{max-width:1180px;margin:0 auto;padding:30px 24px 50px;color:var(--muted);
   <div class="hero-in">
     <div>
       <h1>Réseaux étendus, simulés pas à pas</h1>
-      <p class="lead">Huit travaux pratiques d’interconnexion : routage, MPLS, NAT, tunnels GRE et IPsec, BGP. Chaque TP se lance dans le navigateur et son compte rendu s’ouvre en PDF.</p>
+      <p class="lead">Dix travaux pratiques d’interconnexion : routage, MPLS, NAT, tunnels GRE et IPsec, BGP. Chaque TP se lance dans le navigateur et son compte rendu s’ouvre en PDF.</p>
       <a class="cta" href="#tp">Voir les simulations</a>
       <div class="who"><div class="avatar">MR</div><div><b>Mohamed Rayene Trabelsi</b><small>RSI31 · ISET Nabeul</small></div></div>
     </div>
@@ -102,7 +102,7 @@ footer{max-width:1180px;margin:0 auto;padding:30px 24px 50px;color:var(--muted);
 </header>
 
 <main id="tp">
-  <h2 class="sec">Les huit TP</h2>
+  <h2 class="sec">Les dix TP</h2>
   <p class="sec-sub">Chaque carte donne accès à la simulation interactive et au compte rendu détaillé au format PDF.</p>
   <div class="grid" id="grid"></div>
 </main>
@@ -121,7 +121,9 @@ const LABS = [
   {dir:"tp4-ip-sec-gre", tag:"TP4", name:"GRE over IPsec", sub:"Tunnel GRE entre deux sites, protégé par IPsec pour transporter aussi le routage dynamique.", chips:["interface tunnel 0","crypto ipsec profile"], c:"--coral", s:"gre"},
   {dir:"tp4-ip-sec-vpn", tag:"TP4", name:"VPN IPsec site à site", sub:"Politique ISAKMP, transform-set et crypto map pour relier deux réseaux à travers l’opérateur.", chips:["crypto isakmp policy 10","crypto map"], c:"--coral", s:"ipsec"},
   {dir:"tpbgp", tag:"BGP", name:"Routage BGP", sub:"Sessions BGP et échange de routes entre systèmes autonomes.", chips:["router bgp","neighbor"], c:"--magenta", s:"bgp"},
-  {dir:"redistribution", tag:"RED", name:"Redistribution de routes", sub:"Échange de routes entre protocoles de routage différents sur un routeur frontière.", chips:["redistribute"], c:"--amber", s:"redis"}
+  {dir:"redistribution", tag:"RED", name:"Redistribution de routes", sub:"Échange de routes entre protocoles de routage différents sur un routeur frontière.", chips:["redistribute"], c:"--amber", s:"redis"},
+  {dir:"tp5-bs", tag:"TP5", name:"TP5 BS", sub:"Simulation du TP5 BS et son compte rendu détaillé.", chips:["TP5"], c:"--green", s:"bs"},
+  {dir:"tp5-avance", tag:"TP5", name:"TP5 avancé", sub:"Simulation du TP5 avancé et son compte rendu détaillé.", chips:["TP5"], c:"--indigo", s:"avance"}
 ];
 /* ====================== */
 
@@ -135,6 +137,8 @@ const SCENES={
   gre:L(34,55,206,55,1)+I("router",10,31,48)+I("router",182,31,48)+`<rect x="94" y="43" width="52" height="24" rx="12" fill="currentColor"/>`+T(120,60,"GRE"),
   ipsec:L(34,55,206,55,1)+I("router",10,31,48)+I("router",182,31,48)+I("lock",100,34,40),
   bgp:L(94,57,146,57)+I("cloud",10,15,84)+I("cloud",146,15,84)+T(52,62,"AS 1")+T(188,62,"AS 2"),
+  bs:L(30,55,100,55)+L(100,55,150,55)+L(150,55,210,55)+I("pc",8,33,44)+I("switch",78,33,44)+I("router",128,30,52)+I("server",188,33,44),
+  avance:L(40,32,120,56)+L(40,80,120,56)+L(120,56,206,55)+I("router",16,10,44)+I("router",16,58,44)+I("cloud",96,18,76)+I("router",182,31,48)+T(134,61,"WAN",11),
   redis:L(30,30,120,56)+L(30,80,120,56)+L(120,56,206,55)+I("router",8,8,44)+I("router",8,58,44)+I("router",94,30,52)+I("router",182,31,48)
 };
 const grid=document.getElementById("grid");
